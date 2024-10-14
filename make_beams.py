@@ -4,7 +4,6 @@ from numpy import genfromtxt
 from scipy.interpolate import interp1d
 import scipy.optimize as opt
 import sys, os
-sys.path.append('/Users/laurensaunders/beam_systematics/lauren/')
 import elliptical_beam
 
 class AnalyticBeam:

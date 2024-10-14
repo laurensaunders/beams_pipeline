@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
 import os, sys
-# path_prefix = './'
-path_prefix = '/Users/laurensaunders/' # change this if you need to give your code the path on your system
-sys.path.append(path_prefix) # uncomment this if you needed the line above
+path_prefix = '/Users/laurensaunders/' # change this to give your code the path to map_multi_tool on your system
+sys.path.append(path_prefix)
 import map_multi_tool.MMTModules as mmt
+beams_pipeline_prefix = path_prefix # change this if the path to beams_pipeline is not the same as to map_multi_tool
 
 def get_mmt_leakage(Beam, spectrum_params):
     """
@@ -35,7 +35,7 @@ def get_mmt_leakage(Beam, spectrum_params):
     binned_ell, binned_spectra = mmt.get_leakage_spectra(beam_matrix, beam_params['pixel_size'], beam_params['N'], beam_params['beam_fwhm'], spectrum_params['sky_decomp'], spectrum_params['delta_ell'], spectrum_params['ell_max'], spectrum_params['choose_normalization'])
     return binned_ell, binned_spectra
 
-def sample_cmb(binned_ell, beams_pipeline_prefix=path_prefix):
+def sample_cmb(binned_ell, beams_pipeline_prefix=beams_pipeline_prefix):
     """
     Interpolate CMB TT, EE, and BB spectra to the binned_ell values.
 
@@ -64,7 +64,7 @@ def sample_cmb(binned_ell, beams_pipeline_prefix=path_prefix):
 
     return CMB_binned
 
-def make_leakage_plot(binned_ell, binned_spectra, title, CMB_compare=True, beams_pipeline_prefix=path_prefix, savefig=False):
+def make_leakage_plot(binned_ell, binned_spectra, title, CMB_compare=True, beams_pipeline_prefix=beams_pipeline_prefix, savefig=False):
     """
     Simple plotter for binned leakage spectra.
 
