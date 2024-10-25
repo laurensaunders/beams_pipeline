@@ -89,7 +89,7 @@ def make_leakage_plot(binned_ell, binned_spectra, title, leakage, CMB_compare=Tr
         plt.semilogy(CMB_binned['ee_ell'], CMB_binned['EE'], label='CMB EE')
         plt.semilogy(CMB_binned['bb_ell'], CMB_binned['BB'], label='CMB BB')
         if leakage == 'TE':
-            plt.semilogy(binned_ell[np.where(binned_spectra['EE']>1e-20)], binned_spectra['EE'][np.where(binned_spectra['EE']>1e-20)] * CMB_binned['EE'][np.where(binned_spectra['EE']>1e-20)], label='T->E leakage', linestyle='-', marker='')
+            plt.semilogy(binned_ell[np.where(binned_spectra['EE']>1e-20)], binned_spectra['EE'][np.where(binned_spectra['EE']>1e-20)] * CMB_binned['TT'][np.where(binned_spectra['EE']>1e-20)], label='T->E leakage', linestyle='-', marker='')
         elif leakage == 'TT':
             plt.semilogy(binned_ell[np.where(binned_spectra['TT']>1e-20)], binned_spectra['TT'][np.where(binned_spectra['TT']>1e-20)] * CMB_binned['TT'][np.where(binned_spectra['TT']>1e-20)], label='TT Window Function', linestyle='-', marker='')
     else:
