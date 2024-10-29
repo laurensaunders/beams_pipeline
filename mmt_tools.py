@@ -83,6 +83,7 @@ def make_leakage_plot(binned_ell, binned_spectra, title, leakage, CMB_compare=Tr
                             If not, set to False. Default is False.
     """
     plt.figure()
+    showBB = False
     if CMB_compare:
         CMB_binned = sample_cmb(binned_ell, beams_pipeline_prefix)
         plt.semilogy(CMB_binned['tt_ell'], CMB_binned['TT'], label='CMB TT')
