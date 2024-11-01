@@ -16,7 +16,7 @@ def make_2d_elliptical_beam(N, pix_size, beam_size_fwhm, ellipt, theta=np.pi/4, 
     gaussian = gaussian / np.sum(gaussian)
     return gaussian
 
-def make_2d_elliptical_beam_rot(N, pix_size, beam_size_fwhm, ellipt, theta=np.pi/4, offset_x=0.0, offset_y=0.0):
+def make_2d_elliptical_beam_rot(N, pix_size, beam_size_fwhm, ellipt, theta=-np.pi/4, offset_x=0.0, offset_y=0.0):
     '''
     Alteration of make_2d_gaussian_beam to make elliptical beams
     '''
@@ -75,8 +75,8 @@ def make_beam_matrix(s, d, a_n, zeros):
     beam_matrix['IU'] = zeros
     beam_matrix['QI'] = s
     beam_matrix['QQ'] = d
-    beam_matrix['QU'] = a_n
-    beam_matrix['UI'] = zeros
+    beam_matrix['QU'] = a_n # MMT says this should be UI
+    beam_matrix['UI'] = zeros # MMT says this should be QU
     beam_matrix['UQ'] = zeros
     beam_matrix['UU'] = d
     return beam_matrix

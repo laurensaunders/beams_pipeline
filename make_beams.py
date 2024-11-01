@@ -34,7 +34,7 @@ class AnalyticBeam:
 
         s, d, an, bn = elliptical_beam.make_beam_params(betas[0], betas[1], betas[2], betas[3])
         beam_matrix = elliptical_beam.make_beam_matrix(s, d, an, z)
-#        beam_matrix['QI'] = s
+
         return beam_matrix
 
 class HFSSBeam:

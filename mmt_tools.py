@@ -33,6 +33,9 @@ def get_mmt_leakage(Beam, spectrum_params):
     beam_matrix = Beam.beam_matrix
 
     binned_ell, binned_spectra = mmt.get_leakage_spectra(beam_matrix, beam_params['pixel_size'], beam_params['N'], beam_params['beam_fwhm'], spectrum_params['sky_decomp'], spectrum_params['delta_ell'], spectrum_params['ell_max'], spectrum_params['choose_normalization'])
+    print(binned_ell)
+    print(binned_spectra['EE'])
+    print(binned_spectra['EB'])
     return binned_ell, binned_spectra
 
 def sample_cmb(binned_ell, beams_pipeline_prefix=beams_pipeline_prefix):
@@ -60,14 +63,14 @@ def sample_cmb(binned_ell, beams_pipeline_prefix=beams_pipeline_prefix):
 
     CMB_binned = {'tt_ell': binned_ell,
                   'ee_ell': binned_ell,
-                  'bb_ell': binned_ell,
+                  'bb_ell': b_ell_cmb,
                   'TT': binned_cmb_t,
                   'EE': binned_cmb_e,
-                  'BB': binned_cmb_b}
+                  'BB': b_cmb}
     
     return CMB_binned
 
-def make_leakage_plot(binned_ell, binned_spectra, title, leakage, CMB_compare=True, beams_pipeline_prefix=beams_pipeline_prefix, savefig=False):
+def make_leakage_plot(binned_ell, binned_spectra, title, leakage, CMB_compare=True, showBB=False, beams_pipeline_prefix=beams_pipeline_prefix, savefig=False):
     """
     Simple plotter for binned leakage spectra.
 
@@ -83,36 +86,43 @@ def make_leakage_plot(binned_ell, binned_spectra, title, leakage, CMB_compare=Tr
                             If not, set to False. Default is False.
     """
     plt.figure()
-    showBB = False
+    print(binned_spectra.keys())
+    CMB_binned = sample_cmb(binned_ell, beams_pipeline_prefix)
+        
     if CMB_compare:
-        CMB_binned = sample_cmb(binned_ell, beams_pipeline_prefix)
-        plt.semilogy(CMB_binned['tt_ell'], CMB_binned['TT'], label='CMB TT')
-        plt.semilogy(CMB_binned['ee_ell'], CMB_binned['EE'], label='CMB EE')
+        print(CMB_binned['tt_ell'])
+        plt.loglog(CMB_binned['tt_ell'], CMB_binned['TT'], label='CMB TT')
+        plt.loglog(CMB_binned['ee_ell'], CMB_binned['EE'], label='CMB EE')
         if 'TE' in leakage:
-            plt.semilogy(binned_ell[np.where(binned_spectra['EE']>1e-20)], binned_spectra['EE'][np.where(binned_spectra['EE']>1e-20)] * CMB_binned['TT'][np.where(binned_spectra['EE']>1e-20)], label='T->E leakage', linestyle='-', marker='')
+            plt.loglog(binned_ell[np.where(binned_spectra['EE']>1e-120)], binned_spectra['EE'][np.where(binned_spectra['EE']>1e-120)] * CMB_binned['TT'][np.where(binned_spectra['EE']>1e-120)], label='T->E leakage', linestyle='-', marker='')
         if 'TT' in leakage:
-            plt.semilogy(binned_ell[np.where(binned_spectra['TT']>1e-20)], binned_spectra['TT'][np.where(binned_spectra['TT']>1e-20)] * CMB_binned['TT'][np.where(binned_spectra['TT']>1e-20)], label='TT Window Function', linestyle='-', marker='')
+            plt.loglog(binned_ell[np.where(binned_spectra['TT']>1e-20)], binned_spectra['TT'][np.where(binned_spectra['TT']>1e-20)], label='TT Window Function', linestyle='-', marker='')
         if 'TB' in leakage:
             showBB = True
-            plt.semilogy(binned_ell[np.where(binned_spectra['TT']>1e-20)], binned_spectra['TB'][np.where(binned_spectra['TT']>1e-20)] * CMB_binned['TT'][np.where(binned_spectra['TT']>1e-20)], label='T->B leakage', linestyle='-', marker='')
+            #plt.semilogy(binned_ell[np.where(binned_spectra['BB']>1e-120)], binned_spectra['BB'][np.where(binned_spectra['BB']>1e-120)] * CMB_binned['TT'][np.where(binned_spectra['BB']>1e-120)], label='T->B leakage', linestyle='-', marker='')
+            plt.loglog(binned_ell[np.where(binned_spectra['TB']>1e-120)], binned_spectra['TB'][np.where(binned_spectra['TB']>1e-120)], label='T->B leakage', linestyle='-', marker='')
         if 'EB' in leakage:
             showBB = True
-            plt.semilogy(binned_ell[np.where(binned_spectra['EB']>1e-20)], binned_spectra['EB'][np.where(binned_spectra['EB']>1e-20)] * CMB_binned['EE'][np.where(binned_spectra['EB']>1e-20)], label='E->B leakage', linestyle='-', marker='')
+            plt.loglog(binned_ell[np.where(binned_spectra['EB']>1e-120)], binned_spectra['EB'][np.where(binned_spectra['EB']>1e-120)] * CMB_binned['EE'][np.where(binned_spectra['EB']>1e-120)], label='E->B leakage', linestyle='-', marker='')
         if showBB:
-            plt.semilogy(CMB_binned['bb_ell'], CMB_binned['BB'], label='CMB BB')
+            plt.loglog(CMB_binned['bb_ell'], CMB_binned['BB'], label='CMB BB')
     else:
         if 'TE' in leakage:
-            plt.semilogy(binned_ell[np.where(binned_spectra['EE']>1e-20)], binned_spectra['EE'][np.where(binned_spectra['EE']>1e-20)], label='T->E leakage', linestyle='-', marker='')
+            plt.loglog(binned_ell[np.where(binned_spectra['EE']>1e-20)], binned_spectra['EE'][np.where(binned_spectra['EE']>1e-20)], label='T->E leakage', linestyle='-', marker='')
         if 'TT' in leakage:
-            plt.semilogy(binned_ell[np.where(binned_spectra['TT']>1e-20)], binned_spectra['TT'][np.where(binned_spectra['TT']>1e-20)], label='TT Window Function', linestyle='-', marker='')
+            plt.loglog(binned_ell[np.where(binned_spectra['TT']>1e-20)], binned_spectra['TT'][np.where(binned_spectra['TT']>1e-20)], label='TT Window Function', linestyle='-', marker='')
         if 'TB' in leakage:
-            plt.semilogy(binned_ell[np.where(binned_spectra['TB']>1e-20)], binned_spectra['TB'][np.where(binned_spectra['TB']>1e-20)], label='T->B leakage', linestyle='-', marker='')
+            plt.loglog(binned_ell[np.where(binned_spectra['BB']>1e-120)], binned_spectra['BB'][np.where(binned_spectra['BB']>1e-120)], label='T->B leakage', linestyle='-', marker='')
         if 'EB' in leakage:
-            plt.semilogy(binned_ell[np.where(binned_spectra['EB']>1e-20)], binned_spectra['EB'][np.where(binned_spectra['EB']>1e-20)], label='E->B leakage', linestyle='-', marker='')
+            plt.loglog(binned_ell[np.where(binned_spectra['EB']>1e-120)], binned_spectra['EB'][np.where(binned_spectra['EB']>1e-120)], label='E->B leakage', linestyle='-', marker='')
+        if showBB:
+            plt.loglog(CMB_binned['bb_ell'], CMB_binned['BB'], label='CMB BB')
     plt.xlabel('$\ell$')
     plt.ylabel('$C_{\ell}$')
     plt.legend()
-  #  plt.ylim(1e-12, 1e-5)
+#    plt.ylim(1e-13, 1e0)
+    plt.xlim(1e1, 1e4)
+    plt.grid()
     plt.title(title)
     if savefig:
         plt.savefig(savefig)
