@@ -20,6 +20,7 @@ class AnalyticBeam:
     """
     def __init__(self, params):
         self.params = params
+        self.params['beam_type'] = 'analytic'
         self.beam_matrix = self.make_beam_matrix()
 
     def make_beam_matrix(self):
@@ -40,6 +41,7 @@ class AnalyticBeam:
 class HFSSBeam:
     def __init__(self, params):
         self.params = params
+        self.params['beam_type'] = 'hfss'
         self.freq = np.linspace(self.params['fmin'], self.params['fmax'], self.params['numfreqs'])
         self.folders = {'IQ': self.params['folder']['I'],
                         'U': self.params['folder']['U']}
