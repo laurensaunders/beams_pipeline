@@ -56,15 +56,15 @@ def sample_cmb(binned_ell, beams_pipeline_prefix=beams_pipeline_prefix):
     binned_cmb_t = cmb_t_fn(binned_ell)
     cmb_e_fn = interp1d(e_ell_cmb, e_cmb)
     binned_cmb_e = cmb_e_fn(binned_ell)
-    cmb_b_fn = interp1d(b_ell_cmb, b_cmb)
-    binned_cmb_b = cmb_b_fn(binned_ell)
+#    cmb_b_fn = interp1d(b_ell_cmb, b_cmb)
+#    binned_cmb_b = cmb_b_fn(binned_ell)
 
     CMB_binned = {'tt_ell': binned_ell,
                   'ee_ell': binned_ell,
-                  'bb_ell': binned_ell,
+                  'bb_ell': b_ell_cmb,
                   'TT': binned_cmb_t,
                   'EE': binned_cmb_e,
-                  'BB': binned_cmb_b}
+                  'BB': b_cmb}
     
     return CMB_binned
 
@@ -100,30 +100,30 @@ def make_leakage_plot(binned_ell, binned_spectra, title, leakage, CMB_compare=Tr
         plt.loglog(CMB_binned['tt_ell'], CMB_binned['TT'], label='CMB TT')
         plt.loglog(CMB_binned['ee_ell'], CMB_binned['EE'], label='CMB EE')
         if 'TE' in leakage and 'TE' in available:
-            plt.loglog(binned_ell[np.where(binned_spectra['EE']>1e-20)], binned_spectra['EE'][np.where(binned_spectra['EE']>1e-20)] * CMB_binned['TT'][np.where(binned_spectra['EE']>1e-20)], label='T->E leakage', linestyle='-', marker='')
+            plt.loglog(binned_ell[np.where(binned_spectra['EE']>1e-120)], binned_spectra['EE'][np.where(binned_spectra['EE']>1e-120)] * CMB_binned['TT'][np.where(binned_spectra['EE']>1e-120)], label='T->E leakage', linestyle='-', marker='')
         if 'TT' in leakage and 'TT' in available:
-            plt.semilogy(binned_ell[np.where(binned_spectra['TT']>1e-20)], binned_spectra['TT'][np.where(binned_spectra['TT']>1e-20)] * CMB_binned['TT'][np.where(binned_spectra['TT']>1e-20)], label='TT Window Function', linestyle='-', marker='')
+            plt.semilogy(binned_ell[np.where(binned_spectra['TT']>1e-120)], binned_spectra['TT'][np.where(binned_spectra['TT']>1e-120)] * CMB_binned['TT'][np.where(binned_spectra['TT']>1e-120)], label='TT Window Function', linestyle='-', marker='')
         if 'TB' in leakage and 'TB' in available:
             showBB = True
-            plt.semilogy(binned_ell[np.where(binned_spectra['TT']>1e-20)], binned_spectra['TB'][np.where(binned_spectra['TT']>1e-20)] * CMB_binned['TT'][np.where(binned_spectra['TT']>1e-20)], label='T->B leakage', linestyle='-', marker='')
+            plt.semilogy(binned_ell[np.where(binned_spectra['TT']>1e-120)], binned_spectra['TB'][np.where(binned_spectra['TT']>1e-120)] * CMB_binned['TT'][np.where(binned_spectra['TT']>1e-120)], label='T->B leakage', linestyle='-', marker='')
         elif 'TB' in leakage and 'TB' not in available:
             print("'TB' not available for this beam type")
         if 'EB' in leakage and 'EB' in available:
             showBB = True
-            plt.semilogy(binned_ell[np.where(binned_spectra['EB']>1e-20)], binned_spectra['EB'][np.where(binned_spectra['EB']>1e-20)] * CMB_binned['EE'][np.where(binned_spectra['EB']>1e-20)], label='E->B leakage', linestyle='-', marker='')
+            plt.semilogy(binned_ell[np.where(binned_spectra['EB']>1e-120)], binned_spectra['EB'][np.where(binned_spectra['EB']>1e-120)] * CMB_binned['EE'][np.where(binned_spectra['EB']>1e-120)], label='E->B leakage', linestyle='-', marker='')
         elif 'EB' in leakage and 'EB' not in available:
             print("'EB' not available for this beam type")
     else:
         if 'TE' in leakage and 'TE' in available:
-            plt.semilogy(binned_ell[np.where(binned_spectra['EE']>1e-20)], binned_spectra['EE'][np.where(binned_spectra['EE']>1e-20)], label='T->E leakage', linestyle='-', marker='')
+            plt.semilogy(binned_ell[np.where(binned_spectra['EE']>1e-120)], binned_spectra['EE'][np.where(binned_spectra['EE']>1e-120)], label='T->E leakage', linestyle='-', marker='')
         if 'TT' in leakage and 'TT' in available:
-            plt.semilogy(binned_ell[np.where(binned_spectra['TT']>1e-20)], binned_spectra['TT'][np.where(binned_spectra['TT']>1e-20)], label='TT Window Function', linestyle='-', marker='')
+            plt.semilogy(binned_ell[np.where(binned_spectra['TT']>1e-120)], binned_spectra['TT'][np.where(binned_spectra['TT']>1e-120)], label='TT Window Function', linestyle='-', marker='')
         if 'TB' in leakage and 'TB' in available:
-            plt.semilogy(binned_ell[np.where(binned_spectra['TB']>1e-20)], binned_spectra['TB'][np.where(binned_spectra['TB']>1e-20)], label='T->B leakage', linestyle='-', marker='')
+            plt.semilogy(binned_ell[np.where(binned_spectra['TB']>1e-120)], binned_spectra['TB'][np.where(binned_spectra['TB']>1e-120)], label='T->B leakage', linestyle='-', marker='')
         elif 'TB' in leakage and 'TB' not in available:
             print("'TB' not available for this beam type")
         if 'EB' in leakage and 'EB' in available:
-            plt.semilogy(binned_ell[np.where(binned_spectra['EB']>1e-20)], binned_spectra['EB'][np.where(binned_spectra['EB']>1e-20)], label='E->B leakage', linestyle='-', marker='')
+            plt.semilogy(binned_ell[np.where(binned_spectra['EB']>1e-120)], binned_spectra['EB'][np.where(binned_spectra['EB']>1e-120)], label='E->B leakage', linestyle='-', marker='')
         elif 'EB' in leakage and 'EB' not in available:
             print("'EB' not available for this beam type")
     if showBB:
@@ -131,6 +131,7 @@ def make_leakage_plot(binned_ell, binned_spectra, title, leakage, CMB_compare=Tr
     plt.xlabel('$\ell$')
     plt.ylabel('$C_{\ell}$')
     plt.legend()
+    plt.xlim(min(binned_ell), max(binned_ell))
   #  plt.ylim(1e-12, 1e-5)
     plt.title(title)
     if savefig:
